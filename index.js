@@ -3,7 +3,7 @@ import connectDB from './config/db.js';
 import { configDotenv } from 'dotenv'
 configDotenv();
 import cors from 'cors'
-import authRoutes from './routes/authRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 import taskRoutes from './routes/taskRoutes.js'
 
 
@@ -15,7 +15,7 @@ app.use(express.json())
 
 
 // Authroutes 
-app.use('/api/users', authRoutes)
+app.use('/api/users', userRoutes)
 
 // Taskroutes
 app.use('/api/tasks', taskRoutes)

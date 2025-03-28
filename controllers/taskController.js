@@ -1,11 +1,11 @@
 import Task from '../models/Task.js';
 import User from '../models/User.js';
 
+
 // Assign a task
 export const assignTask = async (req, res) => {
     try {
-        const { title, description, deadline, assignTo, status } = req.body;
-
+        const { title, description, deadline, assignBy, assignTo, status } = req.body;
         // Check if task already assign or not
         const user = await User.findById(assignTo);
         if (!user) {
@@ -17,14 +17,15 @@ export const assignTask = async (req, res) => {
             title,
             description,
             assignTo,
-            assignBy: req.body.id,
+            assignBy,
             status,
-            deadline
+            deadline,
         });
+
         await task.save();
         return res.status(200).json({ message: 'Task assign successfully' });
     } catch (error) {
-        return res.statua(500).json({ message: 'Error when assign a task !' });
+        return res.status(500).json({ message: 'Error when assign a task !' });
     }
 };
 
@@ -32,13 +33,25 @@ export const assignTask = async (req, res) => {
 // Get tasks assign to a user
 export const getUserTask = async (req, res) => {
     try {
-        const tasks = await User.findById({ assignTo: req.user.id });
+        const tasks = await User.findById(req.params.id);
         if (!tasks) {
             return res.status(401).json({ message: 'Task not assign' });
         }
 
-        return res.status(200).json(tasks);
+        return res.status(200).json({ message: "Task fetching successfully", tasks });
     } catch (error) {
         return res.status(500).json({ message: 'Error when fetching user task' });
     }
 };
+
+
+// Get all task 
+export const allTask = async (req, res) => {
+    try {
+        const task = await Task.find();
+        res.status(200).json({ message: 'success', task });
+    } catch (error) {
+        res.status(500).json({ message: 'error' });
+    }
+};
+
